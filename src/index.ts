@@ -2,7 +2,6 @@ interface Attributes {
      [key: string]: string | boolean | number
 }
 
-alert(Date.now())
 
 const app = document.getElementById('app')!
 const table = document.getElementById('table')!
@@ -94,6 +93,25 @@ function createForm()
 
 }
 
+function formUpdate()
+{
+     const form = createElement('form', {class:'form-update d-flex flex-column align-items-center align-self-start justify-content-center gap-3'})
+     
+     const editInput = createElement('input', {
+          id:'edit' ,class:'form-control', placeholder:'Rechercher...'
+     }) as HTMLInputElement
+
+     const editBtn = createElement('button', {
+          class: 'btn btn-primary btn-sm', type:'submit'
+     }) as HTMLButtonElement
+     editBtn.innerHTML = "Editer"
+
+     form.appendChild(editInput)
+     form.appendChild(editBtn)
+     document.body.appendChild(form)
+
+}
+
 function populateTable(data: any[])
 {
 
@@ -166,7 +184,6 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
                addInStorage({
                     id: ++getStorage().length,
                     valeur: input.value,
-                    date: Date.now()
                })
                input.value = ''
                flashMessage("Nouvelle tâche ajoutée", 'success', flash)
