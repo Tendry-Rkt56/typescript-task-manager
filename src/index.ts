@@ -29,8 +29,17 @@ function getById<ArgType>(id: number): ArgType | undefined
      if (!data) return undefined
      return data as ArgType
 }
- 
 
+function updateStorage(newValue: string, id: number) 
+{
+     const storage = getStorage<Attributes>();
+     const index = storage.findIndex(item => item.id === id);
+     if (index !== -1) {
+          storage[index].valeur = newValue
+          setStorage<Attributes>(storage)
+     }
+}
+ 
 function addInStorage(object: Attributes)
 {
      const data: Attributes[] = getStorage<Attributes>()
@@ -176,6 +185,8 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
      const formUpdate = document.querySelector('.form-update') as HTMLFormElement
      const updateInput = document.querySelector('#input-edit') as HTMLInputElement
 
+     let id: number | null = null
+
      form.addEventListener('submit', (e: SubmitEvent) => {
           e.preventDefault()
           if (input.value !== "") {
@@ -204,15 +215,26 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
                populateTable(getStorage())
           }  
           if (target.classList.contains('edit-btn')) {
-               const id = target.getAttribute('data-index')
+               const index = target.getAttribute('data-index')
+               if (index) id = parseInt(index)
                formUpdate.classList.add('active')
                let valeur: Attributes | undefined = {}
-               if (id) valeur = getById<Attributes>(parseInt(id))
+               if (id) valeur = getById<Attributes>(id)
                if (valeur) {
                     updateInput.value = valeur.valeur.toString()
                     console.log(valeur.valeur)
                     console.log(id)
                }
+          }
+     })
+
+     formUpdate.addEventListener('submit', (e: SubmitEvent) => {
+          e.preventDefault()
+          if (updateInput.value !== '') {
+               if (id) updateStorage(updateInput.value, id)
+               formUpdate.classList.remove('active')
+               flashMessage("Tache N° "+id+ " mise à jour", "info", flash)
+               populateTable(getStorage())
           }
      })
 
