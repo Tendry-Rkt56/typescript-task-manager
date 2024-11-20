@@ -2,7 +2,6 @@ interface Attributes {
      [key: string]: string | boolean | number
 }
 
-
 const app = document.getElementById('app')!
 const table = document.getElementById('table')!
 const flash = document.querySelector('.flashMessage') as HTMLElement
@@ -20,6 +19,17 @@ function getStorage<T>(): T[]
      }
      return []
 }
+
+function getById<ArgType>(id: number): ArgType | undefined 
+{
+     const storage = getStorage<Attributes>()
+     
+     const data = storage.find(element => element.id == id) 
+     
+     if (!data) return undefined
+     return data as ArgType
+}
+ 
 
 function addInStorage(object: Attributes)
 {
@@ -93,24 +103,6 @@ function createForm()
 
 }
 
-function formUpdate()
-{
-     const form = createElement('form', {class:'form-update d-flex flex-column align-items-center align-self-start justify-content-center gap-3'})
-     
-     const editInput = createElement('input', {
-          id:'edit' ,class:'form-control', placeholder:'Rechercher...'
-     }) as HTMLInputElement
-
-     const editBtn = createElement('button', {
-          class: 'btn btn-primary btn-sm', type:'submit'
-     }) as HTMLButtonElement
-     editBtn.innerHTML = "Editer"
-
-     form.appendChild(editInput)
-     form.appendChild(editBtn)
-     document.body.appendChild(form)
-
-}
 
 function populateTable(data: any[])
 {
@@ -136,7 +128,8 @@ function populateTable(data: any[])
      
                const actionsCell = createCell('', { 'class': 'd-flex gap-1' })
                const edit = document.createElement('button')
-               edit.setAttribute('class', 'btn btn-sm btn-primary')
+               edit.setAttribute('class', 'edit-btn btn btn-sm btn-primary')
+               edit.setAttribute('data-index', element.id)
                edit.textContent = "Éditer"
                
                const suppr = document.createElement('button')
@@ -173,11 +166,16 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
 
 (function main()
 {
+     
      createForm()
      populateTable(getStorage())
+
      const form = document.querySelector('.form') as HTMLFormElement
      const input = document.querySelector('.input') as HTMLInputElement
      const search = document.getElementById('search') as HTMLInputElement
+     const formUpdate = document.querySelector('.form-update') as HTMLFormElement
+     const updateInput = document.querySelector('#input-edit') as HTMLInputElement
+
      form.addEventListener('submit', (e: SubmitEvent) => {
           e.preventDefault()
           if (input.value !== "") {
@@ -204,9 +202,21 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
                if (id) deleteInStorage(parseInt(id))
                flashMessage("Tache N° "+id+ " supprimée", "danger", flash)
                populateTable(getStorage())
+          }  
+          if (target.classList.contains('edit-btn')) {
+               const id = target.getAttribute('data-index')
+               formUpdate.classList.add('active')
+               let valeur: Attributes | undefined = {}
+               if (id) valeur = getById<Attributes>(parseInt(id))
+               if (valeur) {
+                    updateInput.value = valeur.valeur.toString()
+                    console.log(valeur.valeur)
+                    console.log(id)
+               }
           }
      })
 
      
 })()
+
 

@@ -24,16 +24,18 @@ html {
 }
 
 .form-update {
-     position: fixed;
-     top:50%;
+     z-index:10!important;
+     position: absolute;
+     top:10%;
      left:50%;
      transform:translate(-50%, -50%);
      box-shadow:0 0 10px rgba(0,0,0,0.3);
      padding:10px 20px;
      transition:0.3s;
-     transform: translateY(-100%);
+     transform: translateY(-1000Px);
 }
 
 .form-update.active {
      transform: translateY(0);
 }
+
