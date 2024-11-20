@@ -37,6 +37,13 @@ function deleteInStorage(id: number | null)
      }
 }
 
+function filterStorage(search: string)
+{
+     const storage: Attributes[] = getStorage() || []
+     const newStorage = storage.filter((element) => element.valeur.toString().toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+     return newStorage
+}
+
 function createElement(tag: string, attributes: Attributes): HTMLElement
 {
      const element = document.createElement(tag)
@@ -64,8 +71,13 @@ function createForm()
 {
 
      const form = createElement('form', {class:'form d-flex align-items-center align-self-start justify-content-center gap-3'})
+     
+     const searchInput = createElement('input', {
+          id:'search' ,class:'form-control', placeholder:'Rechercher...'
+     }) as HTMLInputElement
+     
      const input = createElement('input', {
-          class:'form-control', required:true, placeholder:'Ajouter une tâche...'
+          class:'input form-control', required:true, placeholder:'Ajouter une tâche...'
      }) as HTMLInputElement
 
      const addBtn = createElement('button', {
@@ -73,6 +85,7 @@ function createForm()
      }) as HTMLButtonElement
      addBtn.innerHTML = "Ajouter"
 
+     form.appendChild(searchInput)
      form.appendChild(input)
      form.appendChild(addBtn)
      app.prepend(form)
@@ -143,7 +156,8 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
      createForm()
      populateTable(getStorage())
      const form = document.querySelector('.form') as HTMLFormElement
-     const input = document.querySelector('input') as HTMLInputElement
+     const input = document.querySelector('.input') as HTMLInputElement
+     const search = document.getElementById('search') as HTMLInputElement
      form.addEventListener('submit', (e: SubmitEvent) => {
           e.preventDefault()
           if (input.value !== "") {
@@ -155,6 +169,12 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
                flashMessage("Nouvelle tâche ajoutée", 'success', flash)
                populateTable(getStorage())
           }
+     })
+
+     search.addEventListener('input', (e) => {
+          console.log(search.value)
+          const dataFilter = filterStorage(search.value)
+          populateTable(dataFilter)
      })
 
      table.addEventListener('click', (e: MouseEvent) => {
