@@ -5,6 +5,27 @@ interface Attributes {
 const app = document.getElementById('app')!
 const table = document.getElementById('table')!
 
+function setStorage<T>(data: T[]): void
+{
+     localStorage.setItem('data', JSON.stringify(data))
+}
+
+function getStorage<T>(): T[]
+{
+     const data = localStorage.getItem('data')
+     if (data) {
+          return JSON.parse(data) as T[]
+     }
+     return []
+}
+
+function addInStorage(object: Attributes)
+{
+     const data: Attributes[] = getStorage<Attributes>()
+     data.push(object) 
+     setStorage<Attributes>(data)
+}
+
 function createElement(tag: string, attributes: Attributes): HTMLElement
 {
      const element = document.createElement(tag)
@@ -31,8 +52,8 @@ function createCell(content: string, attributes: Attributes)
 (function createForm() 
 {
      const form = createElement('form', {class:'form d-flex align-items-center align-self-start justify-content-center gap-3'})
-     const input = createElement('input', {class:'form-control', required:true, placeholder:'Ajouter une tâche...'})
-     const addBtn = createElement('button', {class: 'btn btn-primary btn-sm'})
+     const input = createElement('input', {class:'form-control', required:true, placeholder:'Ajouter une tâche...'}) as HTMLInputElement
+     const addBtn = createElement('button', {class: 'btn btn-primary btn-sm', type:'submit'}) as HTMLButtonElement
      addBtn.innerHTML = "Ajouter"
      form.appendChild(input)
      form.appendChild(addBtn)
@@ -48,7 +69,7 @@ function populateTable(data: any[])
      headerRow.appendChild(createCell('Actions', { header: true }))
      thead.appendChild(headerRow)
      const tbody = document.createElement('tbody')
-     if (data.length > 0) {
+     if (data == null || data.length > 0) {
           data.forEach(element => {
                const tr = document.createElement('tr')
                tr.setAttribute('data', element.id)
