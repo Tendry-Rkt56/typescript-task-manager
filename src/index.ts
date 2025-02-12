@@ -2,6 +2,8 @@ interface Attributes {
      [key: string]: string | boolean | number
 }
 
+alert(Date.now())
+
 const app = document.getElementById('app')!
 const table = document.getElementById('table')!
 const flash = document.querySelector('.flashMessage') as HTMLElement
@@ -163,7 +165,8 @@ function flashMessage(valeur: string, type: string, container: HTMLElement)
           if (input.value !== "") {
                addInStorage({
                     id: ++getStorage().length,
-                    valeur: input.value
+                    valeur: input.value,
+                    date: Date.now()
                })
                input.value = ''
                flashMessage("Nouvelle tâche ajoutée", 'success', flash)

@@ -23,6 +23,17 @@ html {
      transform:translateX(0);
 }
 
-/* .form {
-     width:50%;
-} */
+.form-update {
+     position: fixed;
+     top:50%;
+     left:50%;
+     transform:translate(-50%, -50%);
+     box-shadow:0 0 10px rgba(0,0,0,0.3);
+     padding:10px 20px;
+     transition:0.3s;
+     transform: translateY(-100%);
+}
+
+.form-update.active {
+     transform: translateY(0);
+}
