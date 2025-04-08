@@ -54,6 +54,7 @@ function deleteInStorage(id: number | null)
           const newStorage = storage.filter((element) => element.id != id)
           setStorage(newStorage)
           console.log(newStorage)
+          console.log('Salut les gens')
      }
 }
 
